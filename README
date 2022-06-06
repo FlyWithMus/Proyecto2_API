@@ -1,0 +1,50 @@
+PORTAL DE NECESIDADES DIGITALES
+
+ENTIDADES
+
+1. USER:
+   -id
+   -nombre
+   -email
+   -password
+   -bio
+   -picture
+
+2. SERVICIOS:
+   -id
+   -Titulo
+   -Descripcion
+   -Fichero Petición (file)
+   -Comentarios
+   -Fichero Resolución (file)
+   -Marcar Resuelto o Pendiente
+   -id_user (petición)
+
+ENDPOINTS
+GET/ Devuelve lista con servicios requeridos
+POST/user Registro Usuario
+PUT/user Validar usuario
+
+POST/ login Login Usuario (devuelve token)
+GET/user/:id Devuelve info Usuario (authentication)
+POST/services registro servicio requerido (authentication) ..Title, description, file
+POST/service/:service_id/fileresolved envio de servicio resuelto (authentication)..file
+POST/service/:service_id/comment añadir comentario (authentication)..comment
+\*\*\* MARCAR PETICIÓN COMO RESUELTA .... POST/service/:service_id/status
+PATCH/user/:id Modificar usuario (authentication extra :id)
+DELETE/user/:id Borrar usuario (authentication extra :id)
+
+NPM Downloads-extra:
+
+1. Express (installed)
+2. Mysql2 (installed)
+3. Nodemon (installed)
+4. Morgan
+5. Dotenv (installed)
+6. jsonwebtoken
+7. joi
+8. uuid
+9. bcrypt
+
+VC. Eslint (installed)
+VC. Prettier (installed)
