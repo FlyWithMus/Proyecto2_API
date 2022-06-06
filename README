@@ -28,18 +28,22 @@ ENTIDADES
 
 ENDPOINTS
 GET/ Devuelve lista con servicios requeridos
-POST/user Registro Usuario
-PUT/user Validar usuario
+POST/users Registro Usuario
+PUT/users/validate/:registrationCode Validar usuario
 
 POST/ login Login Usuario (devuelve token)
-GET/user/:id Devuelve info Usuario (authentication)
-POST/services registro servicio requerido (authentication) ..Title, description, file
+
+<!-- GET/users/:id Devuelve info Usuario (authentication) -->
+
+POST/services registro servicio requerido
+(authentication) ..Title, description, file
+
 POST/comment/:service_id/ envio de servicio resuelto (authentication)..file and/or comment
 
-PATCH/service/:service_id ....resolution status en el body (authentication)
+PATCH/services/:service_id ....resolution status en el body (authentication)
 
-PATCH/user/ Modificar usuario (authentication ) cuidado validacion email
-DELETE/user/ Borrar usuario (authentication extra :id)-- id del token (req.auth.id) mirar
+PATCH/users Modificar usuario (authentication ) cuidado validacion email
+DELETE/users Borrar usuario (authentication extra :id)-- id del token (req.auth.id) mirar
 
 NPM Downloads-extra:
 
