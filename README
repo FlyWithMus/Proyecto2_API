@@ -15,10 +15,14 @@ ENTIDADES
    -Titulo
    -Descripcion
    -Fichero Petición (file)
-   -Comentarios
-   -Fichero Resolución (file)
-   -Marcar Resuelto o Pendiente
-   -id_user (petición)
+   -Marcar Resuelto o Pendiente (del que publico el servicio)
+
+   - id_user (petición)
+
+   3. COMENTARIOS
+      -Comentarios
+      -Fichero Resolución (file)
+      -id_servicio
 
 ENDPOINTS
 GET/ Devuelve lista con servicios requeridos
@@ -28,11 +32,12 @@ PUT/user Validar usuario
 POST/ login Login Usuario (devuelve token)
 GET/user/:id Devuelve info Usuario (authentication)
 POST/services registro servicio requerido (authentication) ..Title, description, file
-POST/service/:service_id/fileresolved envio de servicio resuelto (authentication)..file
-POST/service/:service_id/comment añadir comentario (authentication)..comment
-\*\*\* MARCAR PETICIÓN COMO RESUELTA .... POST/service/:service_id/status
-PATCH/user/:id Modificar usuario (authentication extra :id)
-DELETE/user/:id Borrar usuario (authentication extra :id)
+POST/comment/:service_id/ envio de servicio resuelto (authentication)..file and comment
+
+PATCH/service/:service_id ....status en el body
+
+PATCH/user/ Modificar usuario (authentication ) cuidado validacion email
+DELETE/user/ Borrar usuario (authentication extra :id)-- id del token (req.auth.id) mirar
 
 NPM Downloads-extra:
 
