@@ -50,12 +50,12 @@ NPM Downloads-extra:
 1. Express (installed)
 2. Mysql2 (installed)
 3. Nodemon (installed)
-4. Morgan
+4. Morgan (installed)
 5. Dotenv (installed)
-6. jsonwebtoken
-7. joi
-8. uuid
-9. bcrypt
+6. jsonwebtoken (installed)
+7. joi (installed)
+8. uuid (installed)
+9. bcrypt (installed)
 
 VC. Eslint (installed)
 VC. Prettier (installed)
