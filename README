@@ -56,6 +56,7 @@ NPM Downloads-extra:
 7. joi (installed)
 8. uuid (installed)
 9. bcrypt (installed)
+10. express-fileupload(installed)
 
 VC. Eslint (installed)
 VC. Prettier (installed)
