@@ -5,7 +5,12 @@ const uploadFile = async (file) => {
   const fileExt = path.extname(file.name);
   const fileName = `${uuidv4()}.${fileExt}`;
 
-  const filePath = path.join(__dirname, "..", "uploads", fileName);
+  const filePath = path.join(
+    __dirname,
+    "..",
+    "uploads/requiredServicesFiles",
+    fileName
+  );
 
   await file.mv(filePath);
 
