@@ -1,6 +1,6 @@
 const express = require("express");
 require("dotenv").config();
-
+const fileUpload = require("express-fileupload");
 const morgan = require("morgan");
 
 const {
@@ -24,14 +24,15 @@ const {
   deleteUserController,
 } = require("./controllers/extraUsersControllers");
 
-const { SERVER_PORT } = process.env;
+const validateAuth = require("./middlewares/authentication");
 
-console.log(process.env);
+const { SERVER_PORT } = process.env;
 
 const app = express();
 
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(fileUpload());
 
 //USERS ENDPOINTS
 app.post("/users", registerUserController);
@@ -41,7 +42,7 @@ app.post("/login", loginUserController);
 
 //SERVICES ENDPOINTS
 app.get("/", getAllServicesController);
-app.post("/services", registerServiceController); //middleware auth
+app.post("/services", validateAuth, registerServiceController); //middleware auth
 app.patch("/services/:service_id", setStatusController); //middleware auth
 
 //COMMENTS ENDPOINTS
