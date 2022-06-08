@@ -9,6 +9,7 @@ ENTIDADES
    -password
    -bio
    -picture
+   -registrationCode
 
 2. SERVICIOS:
    -id
@@ -43,7 +44,7 @@ POST/comment/:service_id/ envio de servicio resuelto (authentication)..file and/
 PATCH/services/:service_id ....resolution status en el body (authentication)
 
 PATCH/users Modificar usuario (authentication ) cuidado validacion email
-DELETE/users Borrar usuario (authentication extra :id)-- id del token (req.auth.id) mirar
+DELETE/users Borrar usuario (authentication extra :id)--
 
 NPM Downloads-extra:
 
