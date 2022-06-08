@@ -1,19 +1,28 @@
-const { registerUser } = require("../repositories/registerUser");
+const registerUser = require("../repositories/registerUser");
+const uploadFile = require("../helpers/uploadFile");
+
+// Login users variables
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { selectUserByEmail } = require("../repositories/selectUserByEmail");
+const { generateError } = require("../helpers/generateError");
 
 const registerUserController = async (req, res, next) => {
   try {
-    const { name, email, password, bio, picture } = req.body;
+    const { name, email, password, bio } = req.body;
+    const { picture } = req.files;
 
-    if (!(name && email && password && bio && picture)) {
+    if (!(name && email && password)) {
       const error = new Error (
-        "User must have name, email, password, bio and picture."
+        "User must have name, email and password."
       );
       error.statusCode = 400;
       throw error;
     }
-
-    const userData = { name, email, password, bio, picture };
-
+    
+    const pictureName = await uploadFile(picture);
+    console.log(pictureName);
+    const userData = { name, email, password, bio, pictureName };
     const resgisterId = await registerUser(userData);
 
     res.status(201).send({
@@ -41,7 +50,16 @@ const validateUserController = async (req, res, next) => {
 
 const loginUserController = async (req, res, next) => {
   try {
-    res.send({
+    const { email, password } = req.body;
+    const user = await selectUserByEmail(email);
+    const encryptedPassword = user?.password;
+    const isLoginValid = user && (await bcrypt.compare(password, encryptedPassword));
+
+    if (!isLoginValid) {
+      generateError("Wrong password or email", 400);
+    }
+
+    res.status(200).send({
       status: "error",
       message: "Not implemented yet",
     });

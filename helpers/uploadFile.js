@@ -8,7 +8,7 @@ const uploadFile = async (file) => {
   const filePath = path.join(
     __dirname,
     "..",
-    "uploads/requiredServicesFiles",
+    "uploads",
     fileName
   );
 
