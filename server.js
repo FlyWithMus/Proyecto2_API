@@ -5,6 +5,7 @@ const morgan = require("morgan");
 
 const {
   registerUserController,
+  activateUserController,
   validateUserController,
   loginUserController,
 } = require("./controllers/usersControllers");
@@ -37,8 +38,9 @@ app.use(express.static("./uploads"));
 
 //USERS ENDPOINTS
 app.post("/users", registerUserController);
-app.put("users/validate/:registrationCode", validateUserController);
+app.get("/users/activate/:registrationCode", activateUserController); // Activate user
 app.post("/login", loginUserController);
+app.put("users/validate/:registrationCode", validateUserController);
 // app.get("/users/:id", validateAuth, getInfoUserController )
 
 //SERVICES ENDPOINTS
