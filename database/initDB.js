@@ -20,7 +20,8 @@ const initDB = async () => {
             email VARCHAR (100) NOT NULL,
             password VARCHAR (50) NOT NULL,
             bio VARCHAR (200),
-            picture VARCHAR (150)
+            picture VARCHAR (150),
+            registrationCode VARCHAR (150)
         );
     `);
 

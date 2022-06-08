@@ -20,7 +20,7 @@ const registerUserController = async (req, res, next) => {
       throw error;
     }
     
-    const pictureName = await uploadFile(picture);
+    const pictureName = await uploadFile(picture, "pictures");
     console.log(pictureName);
     const userData = { name, email, password, bio, pictureName };
     const resgisterId = await registerUser(userData);
