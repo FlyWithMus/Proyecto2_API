@@ -33,6 +33,7 @@ const app = express();
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(fileUpload());
+app.use(express.static("./uploads")); //does not work yet!
 
 //USERS ENDPOINTS
 app.post("/users", registerUserController);
@@ -43,7 +44,7 @@ app.post("/login", loginUserController);
 //SERVICES ENDPOINTS
 app.get("/", getAllServicesController);
 app.post("/services", validateAuth, registerServiceController); //middleware auth
-app.patch("/services/:service_id", setStatusController); //middleware auth
+app.patch("/services/:service_id", validateAuth, setStatusController); //middleware auth
 
 //COMMENTS ENDPOINTS
 app.post("/comments/:service_id", sendCommentFileController); //middleware auth
@@ -64,7 +65,7 @@ app.use((req, res) =>
 app.use((error, req, res, next) => {
   console.error(error);
 
-  res.status(error.status || 500).send({
+  res.status(error.statusCode || 500).send({
     status: "error",
     message: error.message,
   });

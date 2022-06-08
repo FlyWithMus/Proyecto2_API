@@ -13,4 +13,13 @@ const insertNewService = async ({ id_user, title, description, fileName }) => {
   );
   return insertId;
 };
-module.exports = { selectServices, insertNewService };
+
+const updateServiceStatus = async (service_id, id_user) => {
+  const [{ affectedRows }] = await pool.query(
+    `UPDATE services SET status=1 WHERE id=? AND id_user=?;`,
+    [service_id, id_user]
+  );
+  console.log(affectedRows);
+  return affectedRows;
+};
+module.exports = { selectServices, insertNewService, updateServiceStatus };

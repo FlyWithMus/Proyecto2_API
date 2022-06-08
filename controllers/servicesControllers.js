@@ -1,6 +1,7 @@
 const {
   selectServices,
   insertNewService,
+  updateServiceStatus,
 } = require("../repositories/servicesRepos");
 const uploadFile = require("../helpers/uploadFile");
 const generateError = require("../helpers/generateError");
@@ -46,7 +47,7 @@ const registerServiceController = async (req, res, next) => {
 
     await res.status(200).send({
       status: "ok",
-      message: "Your service has been registered",
+      message: "Your service has been successfully registered",
       data: { id: insertId, title: title },
     });
   } catch (error) {
@@ -56,9 +57,19 @@ const registerServiceController = async (req, res, next) => {
 
 const setStatusController = async (req, res, next) => {
   try {
-    res.send({
-      status: "error",
-      message: "Not implemented yet",
+    const { service_id } = req.params;
+    const id_user = req.auth.id;
+    console.log(service_id, id_user);
+    const affectedRows = await updateServiceStatus(service_id, id_user);
+    if (!affectedRows) {
+      generateError(
+        `You are not allowed to set the status of this service`,
+        403
+      );
+    }
+    res.status(200).send({
+      status: "ok",
+      message: "Your service has been marked as resolved",
     });
   } catch (error) {
     next(error);
