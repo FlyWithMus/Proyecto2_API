@@ -33,7 +33,7 @@ const app = express();
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(fileUpload());
-app.use(express.static("./uploads")); //does not work yet!
+app.use(express.static("./uploads"));
 
 //USERS ENDPOINTS
 app.post("/users", registerUserController);
@@ -47,7 +47,7 @@ app.post("/services", validateAuth, registerServiceController); //middleware aut
 app.patch("/services/:service_id", validateAuth, setStatusController); //middleware auth
 
 //COMMENTS ENDPOINTS
-app.post("/comments/:service_id", sendCommentFileController); //middleware auth
+app.post("/comments/:service_id", validateAuth, sendCommentFileController); //middleware auth
 
 //EXTRA USER ENDPOINTS
 app.patch("/users", modifyUserController); //middleware auth
