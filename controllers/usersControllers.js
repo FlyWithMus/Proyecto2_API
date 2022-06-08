@@ -1,5 +1,6 @@
 const registerUser = require("../repositories/registerUser");
 const uploadFile = require("../helpers/uploadFile");
+const { v4: uuidv4 } = require("uuid");
 
 // Login users variables
 const bcrypt = require("bcrypt");
@@ -10,11 +11,13 @@ const generateError = require("../helpers/generateError");
 // Activate users variables
 const selectUserByActivationCode = require("../repositories/selectUserByActivationCode");
 const deleteRegistrationCode = require("../repositories/deleteRegistrationCode");
+const { use } = require("bcrypt/promises");
 
 const registerUserController = async (req, res, next) => {
   try {
-    const { name, email, password, bio, registrationCode } = req.body;
+    const { name, email, password, bio } = req.body;
     const { picture } = req.files;
+    const registrationCode = uuidv4();
 
     if (!(name && email && password)) {
       const error = new Error (
@@ -23,10 +26,11 @@ const registerUserController = async (req, res, next) => {
       error.statusCode = 400;
       throw error;
     }
-    
+
+    const encryptedPassword = await bcrypt.hash(password, 10);    
     const pictureName = await uploadFile(picture, "pictures");
     console.log(pictureName);
-    const userData = { name, email, password, bio, pictureName, registrationCode };
+    const userData = { name, email, encryptedPassword, bio, pictureName, registrationCode };
     const resgisterId = await registerUser(userData);
 
     res.status(201).send({
@@ -57,7 +61,7 @@ const activateUserController = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 const validateUserController = async (req, res, next) => {
   try {
@@ -74,9 +78,12 @@ const loginUserController = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await selectUserByEmail(email);
-    const encryptedPassword = user?.password;
+    const encryptedPassword = user.password;
     const isLoginValid = user && (await bcrypt.compare(password, encryptedPassword));
-
+    console.log(user);
+    console.log(await bcrypt.compare(password, encryptedPassword));
+    console.log(password);
+    console.log(encryptedPassword);
     if (!isLoginValid) {
       generateError("Wrong password or email", 400);
     }

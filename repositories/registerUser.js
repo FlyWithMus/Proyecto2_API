@@ -1,11 +1,11 @@
 const getPool = require("../database/getPool");
 
-const registerUser = async ({ name, email, password, bio, pictureName, registrationCode }) => {
+const registerUser = async ({ name, email, encryptedPassword, bio, pictureName, registrationCode }) => {
     const pool = getPool();
 
     const [{ registerID }] = await pool.query(
         "INSERT INTO users (name, email, password, bio, picture, registrationCode) VALUES (?, ?, ?, ?, ?, ?)",
-        [name, email, password, bio, pictureName, "-"]
+        [name, email, encryptedPassword, bio, pictureName, registrationCode]
     );
 
     return registerID;
