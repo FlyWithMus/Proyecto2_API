@@ -25,6 +25,8 @@ const {
 } = require("./controllers/extraUsersControllers");
 
 const validateAuth = require("./middlewares/authentication");
+const notFound = require("./middlewares/NotFound");
+const errorHandler = require("./middlewares/errorhandler");
 
 const { SERVER_PORT } = process.env;
 
@@ -43,33 +45,21 @@ app.post("/login", loginUserController);
 
 //SERVICES ENDPOINTS
 app.get("/", getAllServicesController);
-app.post("/services", validateAuth, registerServiceController); //middleware auth
-app.patch("/services/:service_id", validateAuth, setStatusController); //middleware auth
+app.post("/services", validateAuth, registerServiceController);
+app.patch("/services/:service_id", validateAuth, setStatusController);
 
 //COMMENTS ENDPOINTS
-app.post("/comments/:service_id", validateAuth, sendCommentFileController); //middleware auth
+app.post("/comments/:service_id", validateAuth, sendCommentFileController);
 
 //EXTRA USER ENDPOINTS
-app.patch("/users", modifyUserController); //middleware auth
-app.delete("/users", deleteUserController); //middleware auth
+app.patch("/users", validateAuth, modifyUserController);
+app.delete("/users", validateAuth, deleteUserController);
 
 //Middleware 404
-app.use((req, res) =>
-  res.status(404).send({
-    status: "error",
-    message: "Not Found",
-  })
-);
+app.use(notFound);
 
 //Middleware Error
-app.use((error, req, res, next) => {
-  console.error(error);
-
-  res.status(error.statusCode || 500).send({
-    status: "error",
-    message: error.message,
-  });
-});
+app.use(errorHandler);
 
 //Listening
 app.listen(SERVER_PORT, () => {

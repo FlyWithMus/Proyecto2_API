@@ -14,7 +14,7 @@ const sendCommentFileController = async (req, res, next) => {
       generateError(`You must submit a comment and/or a file`, 400);
     }
 
-    //ERROR... IF SOLVEDFILE IS NULL....
+    //ERROR... IF SOLVEDFILE IS NULL.... ?
     const { solvedFile } = req.files;
     const solvedFileName = await uploadFile(solvedFile, "solvedServicesFiles");
     const commentData = { comment, solvedFileName, user_id, service_id };
