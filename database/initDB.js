@@ -16,11 +16,11 @@ const initDB = async () => {
     await pool.query(`
           CREATE TABLE users (
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR (50) NOT NULL,
-            email VARCHAR (50) NOT NULL,
+            name VARCHAR (100) NOT NULL,
+            email VARCHAR (100) NOT NULL,
             password VARCHAR (50) NOT NULL,
-            bio VARCHAR (100) NOT NULL,
-            picture VARCHAR (50) NOT NULL
+            bio VARCHAR (200),
+            picture VARCHAR (150)
         );
     `);
 
@@ -28,9 +28,9 @@ const initDB = async () => {
         CREATE TABLE services (
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             id_user INT NOT NULL,
-            title VARCHAR (20) NOT NULL,
-            description VARCHAR (100) NOT NULL,
-            service_file VARCHAR (50) NOT NULL,
+            title VARCHAR (100) NOT NULL,
+            description VARCHAR (500) NOT NULL,
+            service_file VARCHAR (150),
             status BOOLEAN
         );
     `);
@@ -38,8 +38,8 @@ const initDB = async () => {
     await pool.query(`
           CREATE TABLE comments (
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            comment VARCHAR (100) NOT NULL,
-            solved_file VARCHAR (50) NOT NULL,
+            comment VARCHAR (500),
+            solved_file VARCHAR (150),
             id_user INT NOT NULL,
             id_service INT NOT NULL
         );
