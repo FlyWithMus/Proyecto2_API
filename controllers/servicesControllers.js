@@ -37,12 +37,13 @@ const registerServiceController = async (req, res, next) => {
         400
       );
     }
-    const fileName = await uploadFile(file);
+    const fileName = await uploadFile(file, "requiredServicesFiles");
 
     const newServiceData = { id_user, title, description, fileName };
 
     const insertId = await insertNewService(newServiceData);
 
+    //lo quiero para algo: insertId?
     console.log(insertId);
 
     await res.status(200).send({
@@ -63,7 +64,7 @@ const setStatusController = async (req, res, next) => {
     const affectedRows = await updateServiceStatus(service_id, id_user);
     if (!affectedRows) {
       generateError(
-        `You are not allowed to set the status of this service`,
+        `You are not allowed to set the status of this service or that service does not exist`,
         403
       );
     }
