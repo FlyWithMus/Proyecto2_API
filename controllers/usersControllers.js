@@ -1,6 +1,7 @@
 const registerUser = require("../repositories/registerUser");
 const uploadFile = require("../helpers/uploadFile");
 const { v4: uuidv4 } = require("uuid");
+const sendMail = require("../helpers/sendMail");
 
 // Login users variables
 const bcrypt = require("bcrypt");
@@ -29,9 +30,18 @@ const registerUserController = async (req, res, next) => {
 
     const encryptedPassword = await bcrypt.hash(password, 10);    
     const pictureName = await uploadFile(picture, "pictures");
-    console.log(pictureName);
     const userData = { name, email, encryptedPassword, bio, pictureName, registrationCode };
     const resgisterId = await registerUser(userData);
+    const { SERVER_HOST, SERVER_PORT } = process.env;
+
+    await sendMail(
+      "Welcome to the best digital services portal!",
+      `
+      <p>Activate your account here:<p>
+      <a href="http://${SERVER_HOST}:${SERVER_PORT}/users/activate/${registrationCode}">Activate account</a>
+      `,
+      email
+    );
 
     res.status(201).send({
       status: "ok",
