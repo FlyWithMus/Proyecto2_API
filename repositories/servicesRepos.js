@@ -6,18 +6,18 @@ const selectServices = async () => {
   return services;
 };
 
-const insertNewService = async ({ id_user, title, description, fileName }) => {
+const insertNewService = async ({ userId, title, description, fileName }) => {
   const [{ insertId }] = await pool.query(
     `INSERT INTO services (id_user, title, description, service_file) VALUES (?,?,?,?)`,
-    [id_user, title, description, fileName]
+    [userId, title, description, fileName]
   );
   return insertId;
 };
 
-const updateServiceStatus = async (service_id, id_user) => {
+const updateServiceStatus = async (serviceId, userId) => {
   const [{ affectedRows }] = await pool.query(
     `UPDATE services SET status=1 WHERE id=? AND id_user=?;`,
-    [service_id, id_user]
+    [serviceId, userId]
   );
   console.log(affectedRows);
   return affectedRows;

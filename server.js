@@ -6,7 +6,6 @@ const morgan = require("morgan");
 const {
   registerUserController,
   activateUserController,
-  validateUserController,
   loginUserController,
 } = require("./controllers/usersControllers");
 
@@ -21,7 +20,7 @@ const {
 } = require("./controllers/commentsControllers");
 
 const {
-  modifyUserController,
+  editUserController,
   deleteUserController,
 } = require("./controllers/extraUsersControllers");
 
@@ -40,21 +39,20 @@ app.use(express.static("./uploads"));
 
 //USERS ENDPOINTS
 app.post("/users", registerUserController);
-app.get("/users/activate/:registrationCode", activateUserController); // Activate user
+app.get("/users/activate/:registrationCode", activateUserController);
 app.post("/login", loginUserController);
-app.put("users/validate/:registrationCode", validateUserController);
 // app.get("/users/:id", validateAuth, getInfoUserController )
 
 //SERVICES ENDPOINTS
 app.get("/", getAllServicesController);
 app.post("/services", validateAuth, registerServiceController);
-app.patch("/services/:service_id", validateAuth, setStatusController);
+app.patch("/services/:serviceId", validateAuth, setStatusController);
 
 //COMMENTS ENDPOINTS
-app.post("/comments/:service_id", validateAuth, sendCommentFileController);
+app.post("/comments/:serviceId", validateAuth, sendCommentFileController);
 
 //EXTRA USER ENDPOINTS
-app.patch("/users", validateAuth, modifyUserController);
+app.patch("/users", validateAuth, editUserController);
 app.delete("/users", validateAuth, deleteUserController);
 
 //Middleware 404

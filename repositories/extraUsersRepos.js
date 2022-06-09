@@ -1,18 +1,22 @@
 const getPool = require("../database/getPool");
 const pool = getPool();
 
-const selectUserById = async (user_id) => {
+const selectUserById = async (userId) => {
   const [[userDB]] = await pool.query("SELECT * FROM users WHERE id = ?", [
-    user_id,
+    userId,
   ]);
   console.log(userDB);
   return userDB;
 };
 
-const updateUserData = async (
-  { name, email, password, bio, pictureName },
-  id
-) => {
+const updateUserData = async ({
+  name,
+  email,
+  password,
+  bio,
+  pictureName,
+  id,
+}) => {
   const [{ affectedRows }] = await pool.query(
     "UPDATE users SET name = ?, email = ?, password = ?, bio = ?, pictureName = ? WHERE id = ?;",
     [name, email, password, bio, pictureName, id]

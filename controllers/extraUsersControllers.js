@@ -4,37 +4,35 @@ const {
   removeUser,
 } = require("../repositories/extraUsersRepos");
 
-// const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 const generateError = require("../helpers/generateError");
 
-const modifyUserController = async (req, res, next) => {
+const editUserController = async (req, res, next) => {
   try {
-    const user_id = req.auth.id;
-    const userDB = await selectUserById(user_id);
+    const userId = req.auth.id;
+    const userDB = await selectUserById(userId);
     //IF new email, new picture or new password!!!!
 
-    const { name, email, password, bio } = req.body;
+    const { email, password } = req.body;
+    //VALIDAR CON joi body
+
     const { picture } = req.files;
 
     if (email) {
       /* Error...You need to register again..
-      Else, send a registration code and activate it. 
+      Else, send a registration code and activate it. METR codigo...al MISMO user_id DB, correo...comprobar correo.
       We must get it out of this path and create a new one. */
     }
     if (password) {
-      /* const encryptedPassword = await bcrypt.hash(password, 10); */
+      req.body.password = await bcrypt.hash(password, 10);
     }
     if (picture) {
-      /* Delete userDB.picture and  upload and update the new PicName */
+      /* req.body.pictureName 
+      Delete userDB.picture and  upload and update the new PicName DB */
     }
 
     /* Make encryptedPassword accesible, also pictureName.. */
-    await updateUserData(
-      { ...userDB },
-      name,
-      /*encryptedPassword*/ bio,
-      user_id
-    );
+    await updateUserData({ ...userDB, ...req.body });
 
     res.send({
       status: "error",
@@ -63,6 +61,6 @@ const deleteUserController = async (req, res, next) => {
 };
 
 module.exports = {
-  modifyUserController,
+  editUserController,
   deleteUserController,
 };

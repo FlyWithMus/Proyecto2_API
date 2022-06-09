@@ -5,6 +5,10 @@ const {
 } = require("../repositories/servicesRepos");
 const uploadFile = require("../helpers/uploadFile");
 const generateError = require("../helpers/generateError");
+const {
+  newServiceSchema,
+  serviceIdSchema,
+} = require("../schemas/servicesSchemas");
 
 const getAllServicesController = async (req, res, next) => {
   try {
@@ -25,31 +29,33 @@ const getAllServicesController = async (req, res, next) => {
 
 const registerServiceController = async (req, res, next) => {
   try {
-    const { title, description } = req.body;
-    const { file } = req.files;
-    console.log(file, title, description);
-    const id_user = req.auth.id;
+    const userId = req.auth.id;
 
-    //ver cómo sería con joi, cuidado con file, no me pilla este error porque es null
+    await newServiceSchema.validateAsync(req.body);
+
+    const { title, description } = req.body;
+
+    console.log(req.body);
+    const file = req.files?.file;
+
+    // console.log(file, title, description);
+
     if (!(title && description && file)) {
       generateError(
         "Your service must include title, description, and a file",
         400
       );
     }
-    const fileName = await uploadFile(file, "requiredServicesFiles");
+    const fileName = await uploadFile(file, "requiredServices");
 
-    const newServiceData = { id_user, title, description, fileName };
+    const newServiceData = { userId, title, description, fileName };
 
     const insertId = await insertNewService(newServiceData);
-
-    //lo quiero para algo: insertId?
-    console.log(insertId);
 
     await res.status(200).send({
       status: "ok",
       message: "Your service has been successfully registered",
-      data: { id: insertId, title: title },
+      data: { title: title, id: insertId },
     });
   } catch (error) {
     next(error);
@@ -58,10 +64,16 @@ const registerServiceController = async (req, res, next) => {
 
 const setStatusController = async (req, res, next) => {
   try {
-    const { service_id } = req.params;
-    const id_user = req.auth.id;
-    console.log(service_id, id_user);
-    const affectedRows = await updateServiceStatus(service_id, id_user);
+    const { serviceId } = req.params;
+
+    await serviceIdSchema.validateAsync(serviceId);
+
+    const userId = req.auth.id;
+
+    console.log(serviceId, userId);
+
+    const affectedRows = await updateServiceStatus(serviceId, userId);
+
     if (!affectedRows) {
       generateError(
         `You are not allowed to set the status of this service or that service does not exist`,

@@ -11,7 +11,6 @@ const generateError = require("../helpers/generateError");
 // Activate users variables
 const selectUserByActivationCode = require("../repositories/selectUserByActivationCode");
 const deleteRegistrationCode = require("../repositories/deleteRegistrationCode");
-const { use } = require("bcrypt/promises");
 
 const registerUserController = async (req, res, next) => {
   try {
@@ -20,17 +19,22 @@ const registerUserController = async (req, res, next) => {
     const registrationCode = uuidv4();
 
     if (!(name && email && password)) {
-      const error = new Error (
-        "User must have name, email and password."
-      );
+      const error = new Error("User must have name, email and password.");
       error.statusCode = 400;
       throw error;
     }
 
-    const encryptedPassword = await bcrypt.hash(password, 10);    
+    const encryptedPassword = await bcrypt.hash(password, 10);
     const pictureName = await uploadFile(picture, "pictures");
     console.log(pictureName);
-    const userData = { name, email, encryptedPassword, bio, pictureName, registrationCode };
+    const userData = {
+      name,
+      email,
+      encryptedPassword,
+      bio,
+      pictureName,
+      registrationCode,
+    };
     const resgisterId = await registerUser(userData);
 
     res.status(201).send({
@@ -51,7 +55,7 @@ const activateUserController = async (req, res, next) => {
 
     const user = await selectUserByActivationCode(registrationCode);
 
-    if(!user) {
+    if (!user) {
       generateError("Invalid registration code or already activated", 404);
     }
 
@@ -63,23 +67,13 @@ const activateUserController = async (req, res, next) => {
   }
 };
 
-const validateUserController = async (req, res, next) => {
-  try {
-    res.send({
-      status: "error",
-      message: "Not implemented yet",
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
 const loginUserController = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await selectUserByEmail(email);
     const encryptedPassword = user.password;
-    const isLoginValid = user && (await bcrypt.compare(password, encryptedPassword));
+    const isLoginValid =
+      user && (await bcrypt.compare(password, encryptedPassword));
     console.log(user);
     console.log(await bcrypt.compare(password, encryptedPassword));
     console.log(password);
@@ -100,7 +94,7 @@ const loginUserController = async (req, res, next) => {
       expiresIn: "30d",
     });
 
-    res.status(200).send({ status: "ok", data: { token }, });
+    res.status(200).send({ status: "ok", data: { token } });
   } catch (error) {
     next(error);
   }
@@ -109,6 +103,5 @@ const loginUserController = async (req, res, next) => {
 module.exports = {
   registerUserController,
   activateUserController,
-  validateUserController,
   loginUserController,
 };
