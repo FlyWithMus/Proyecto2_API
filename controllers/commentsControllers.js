@@ -1,6 +1,9 @@
 const generateError = require("../helpers/generateError");
 const uploadFile = require("../helpers/uploadFile");
-const insertCommentsFile = require("../repositories/commentsRepos");
+const {
+  selectServiceById,
+  insertCommentsFile,
+} = require("../repositories/commentsRepos");
 const commentSchema = require("../schemas/commentSchema");
 const { serviceIdSchema } = require("../schemas/servicesSchemas");
 
@@ -9,6 +12,11 @@ const sendCommentFileController = async (req, res, next) => {
     const userId = req.auth.id;
     const { serviceId } = req.params;
     await serviceIdSchema.validateAsync(serviceId);
+
+    const service = await selectServiceById(serviceId);
+    if (!service) {
+      generateError(`This service does not exist`, 404);
+    }
 
     const { comment } = req.body;
 

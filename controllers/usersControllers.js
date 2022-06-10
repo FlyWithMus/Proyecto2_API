@@ -1,8 +1,11 @@
-const registerUser = require("../repositories/registerUser");
+const insertUser = require("../repositories/insertUser");
 const uploadFile = require("../helpers/uploadFile");
 const { v4: uuidv4 } = require("uuid");
 const sendMail = require("../helpers/sendMail");
-const { registerUserSchema } = require("../schemas/usersSchemas");
+const {
+  registerUserSchema,
+  checkUserSchema,
+} = require("../schemas/usersSchemas");
 
 // Login users variables
 const bcrypt = require("bcrypt");
@@ -14,32 +17,42 @@ const generateError = require("../helpers/generateError");
 const selectUserByActivationCode = require("../repositories/selectUserByActivationCode");
 const deleteRegistrationCode = require("../repositories/deleteRegistrationCode");
 
-const registerUserController = async (req, res, next) => {
+const registerUser = async (req, res, next) => {
   try {
     await registerUserSchema.validateAsync(req.body);
 
     const { name, email, password, bio } = req.body;
-    const { picture } = req.files;
-    const registrationCode = uuidv4();
 
-    if (!(name && email && password)) {
-      const error = new Error("User must have name, email and password.");
-      error.statusCode = 400;
-      throw error;
+    const picture = req.files?.picture;
+
+    const user = await selectUserByEmail(email);
+
+    if (email === user?.email) {
+      generateError("This email has already been registered", 400);
     }
 
+    const registrationCode = uuidv4();
+
     const encryptedPassword = await bcrypt.hash(password, 10);
-    const pictureName = await uploadFile(picture, "pictures");
+    const userData = {
+      name,
+      email,
+      encryptedPassword,
+      bio,
+      registrationCode,
+    };
+    if (picture) {
+      const pictureName = await uploadFile(picture, "profilePictures");
+      userData.pictureName = pictureName;
+    }
 
-    const userData = { name, email, encryptedPassword, bio, pictureName, registrationCode };
-
-    const resgisterId = await registerUser(userData);
+    const insertId = await insertUser(userData);
     const { SERVER_HOST, SERVER_PORT } = process.env;
 
     await sendMail(
       "Welcome to the best digital services portal!",
       `
-      <p>Activate your account here:<p>
+      <p>Activate your account here: <p>
       <a href="http://${SERVER_HOST}:${SERVER_PORT}/users/activate/${registrationCode}">Activate account</a>
       `,
       email
@@ -47,10 +60,7 @@ const registerUserController = async (req, res, next) => {
 
     res.status(201).send({
       status: "ok",
-      data: {
-        id: resgisterId,
-        ...userData,
-      },
+      data: { id: insertId, ...userData },
     });
   } catch (error) {
     next(error);
@@ -77,21 +87,25 @@ const activateUserController = async (req, res, next) => {
 
 const loginUserController = async (req, res, next) => {
   try {
+    await checkUserSchema.validateAsync(req.body);
     const { email, password } = req.body;
+
     const user = await selectUserByEmail(email);
-    const encryptedPassword = user.password;
+
+    const encryptedPassword = user?.password;
+
     const isLoginValid =
       user && (await bcrypt.compare(password, encryptedPassword));
-    console.log(user);
-    console.log(await bcrypt.compare(password, encryptedPassword));
-    console.log(password);
-    console.log(encryptedPassword);
+
     if (!isLoginValid) {
       generateError("Wrong password or email", 400);
     }
 
     if (user.registrationCode) {
-      generateError("User not activated. Check your email.", 400);
+      generateError(
+        "User not activated. Check your inbox and activate it through the link.",
+        400
+      );
     }
 
     const tokenPayload = {
@@ -109,7 +123,7 @@ const loginUserController = async (req, res, next) => {
 };
 
 module.exports = {
-  registerUserController,
+  registerUser,
   activateUserController,
   loginUserController,
 };

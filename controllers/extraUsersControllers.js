@@ -1,42 +1,62 @@
+const bcrypt = require("bcrypt");
+const { v4: uuidv4 } = require("uuid");
 const {
   selectUserById,
   updateUserData,
   removeUser,
+  updateEmail,
 } = require("../repositories/extraUsersRepos");
 
-const bcrypt = require("bcrypt");
+const sendMail = require("../helpers/sendMail");
 const generateError = require("../helpers/generateError");
+const { checkUserSchema } = require("../schemas/usersSchemas");
+const uploadFile = require("../helpers/uploadFile");
 
 const editUserController = async (req, res, next) => {
   try {
     const userId = req.auth.id;
     const userDB = await selectUserById(userId);
-    //IF new email, new picture or new password!!!!
 
     const { email, password } = req.body;
-    //VALIDAR CON joi body
 
-    const { picture } = req.files;
+    await checkUserSchema.validateAsync(req.body);
+
+    const picture = req.files?.picture;
 
     if (email) {
-      /* Error...You need to register again..
-      Else, send a registration code and activate it. METR codigo...al MISMO user_id DB, correo...comprobar correo.
-      We must get it out of this path and create a new one. */
+      const { SERVER_HOST, SERVER_PORT } = process.env;
+      const registrationCode = uuidv4();
+      await sendMail(
+        "You are updating your email!",
+        `
+      <p>Activate your new email here:<p>
+      <a href="http://${SERVER_HOST}:${SERVER_PORT}/users/activate/${registrationCode}">Activate account</a>
+      `,
+        email
+      );
+
+      await updateEmail(email, registrationCode, userId);
+      // res.status(201).send({
+      //   status: "ok",
+      //   message:
+      //     "We've sent you a confirmation email. Please, find the link on your inbox and activate your account.",
+      // });
     }
+
     if (password) {
       req.body.password = await bcrypt.hash(password, 10);
     }
-    if (picture) {
-      /* req.body.pictureName 
-      Delete userDB.picture and  upload and update the new PicName DB */
-    }
 
-    /* Make encryptedPassword accesible, also pictureName.. */
+    if (picture) {
+      req.body.picture = await uploadFile(picture, "profilePictures");
+    }
+    console.log({ ...userDB, ...req.body });
     await updateUserData({ ...userDB, ...req.body });
 
-    res.send({
-      status: "error",
-      message: "Under construction",
+    res.status(201).send({
+      status: "Ok",
+      message: "Your profile has been updated",
+      data: { id: userId },
     });
   } catch (error) {
     next(error);

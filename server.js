@@ -4,7 +4,7 @@ const fileUpload = require("express-fileupload");
 const morgan = require("morgan");
 
 const {
-  registerUserController,
+  registerUser,
   activateUserController,
   loginUserController,
 } = require("./controllers/usersControllers");
@@ -38,7 +38,7 @@ app.use(fileUpload());
 app.use(express.static("./uploads"));
 
 //USERS ENDPOINTS
-app.post("/users", registerUserController);
+app.post("/users", registerUser);
 app.get("/users/activate/:registrationCode", activateUserController);
 app.post("/login", loginUserController);
 // app.get("/users/:id", validateAuth, getInfoUserController )

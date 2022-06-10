@@ -8,18 +8,18 @@ const selectUserById = async (userId) => {
   console.log(userDB);
   return userDB;
 };
-
-const updateUserData = async ({
-  name,
-  email,
-  password,
-  bio,
-  pictureName,
-  id,
-}) => {
+const updateEmail = async (email, registrationCode, id) => {
   const [{ affectedRows }] = await pool.query(
-    "UPDATE users SET name = ?, email = ?, password = ?, bio = ?, pictureName = ? WHERE id = ?;",
-    [name, email, password, bio, pictureName, id]
+    "UPDATE users SET email = ?, registrationCode =? WHERE id = ?;",
+    [email, registrationCode, id]
+  );
+  return affectedRows;
+};
+
+const updateUserData = async ({ name, email, password, bio, picture, id }) => {
+  const [{ affectedRows }] = await pool.query(
+    "UPDATE users SET name = ?, email = ?, password = ?, bio = ?, picture = ? WHERE id = ?;",
+    [name, email, password, bio, picture, id]
   );
 
   return affectedRows;
@@ -33,4 +33,4 @@ const removeUser = async (user_id) => {
 
   return affectedRows;
 };
-module.exports = { selectUserById, updateUserData, removeUser };
+module.exports = { selectUserById, updateEmail, updateUserData, removeUser };
