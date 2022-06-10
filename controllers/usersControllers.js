@@ -2,6 +2,7 @@ const registerUser = require("../repositories/registerUser");
 const uploadFile = require("../helpers/uploadFile");
 const { v4: uuidv4 } = require("uuid");
 const sendMail = require("../helpers/sendMail");
+const { registerUserSchema } = require("../schemas/usersSchemas");
 
 // Login users variables
 const bcrypt = require("bcrypt");
@@ -15,6 +16,8 @@ const deleteRegistrationCode = require("../repositories/deleteRegistrationCode")
 
 const registerUserController = async (req, res, next) => {
   try {
+    await registerUserSchema.validateAsync(req.body);
+
     const { name, email, password, bio } = req.body;
     const { picture } = req.files;
     const registrationCode = uuidv4();
