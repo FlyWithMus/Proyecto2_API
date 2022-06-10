@@ -1,7 +1,13 @@
 const Joi = require("joi");
 const generateError = require("../helpers/generateError");
 
-const editUserSchema = Joi.object({
+const checkUserSchema = Joi.object({
+  name: Joi.string()
+    .min(4)
+    .max(100)
+    .error(() => {
+      generateError("Your name must have between 4 and 100 characters", 400);
+    }),
   email: Joi.string()
     .min(4)
     .max(100)
@@ -16,7 +22,13 @@ const editUserSchema = Joi.object({
     .min(4)
     .max(500)
     .error(() => {
-      generateError("Password must have contain 4 and 500 characters", 400);
+      generateError("Password must contain 4 and 500 characters", 400);
+    }),
+  bio: Joi.string()
+    .min(4)
+    .max(500)
+    .error(() => {
+      generateError("Your bio must be between 4 and 500 characters", 400);
     }),
 });
 
@@ -26,34 +38,39 @@ const registerUserSchema = Joi.object({
     .min(4)
     .max(100)
     .error(() => {
-      generateError("Name is a required field. Must be between 4 and 100 characters", 400);
-    }
-  ),
+      generateError(
+        "Name is a required field. Must be between 4 and 100 characters",
+        400
+      );
+    }),
   email: Joi.string()
     .required()
     .min(4)
     .max(100)
     .email()
     .error(() => {
-      generateError("Email is a required field. Must have the appropiate format and must be between 4 and 100 characters", 400);
-    }
-  ),
+      generateError(
+        "Email is a required field, must have the appropiate format and must be between 4 and 100 characters",
+        400
+      );
+    }),
   password: Joi.string()
     .required()
     .min(4)
     .max(500)
     .error(() => {
-      generateError("Password is a required field. Must be between 4 and 500 characters", 400);
-    }
-  ),
+      generateError(
+        "Password is a required field and must be between 4 and 500 characters",
+        400
+      );
+    }),
   bio: Joi.string()
     .min(4)
     .max(500)
     .error(() => {
       generateError("Bio must be between 4 and 500 characters", 400);
-    }
-  ),
+    }),
 });
 
 // const newUserSchema = Joi.ob
-module.exports = { editUserSchema, registerUserSchema };
+module.exports = { checkUserSchema, registerUserSchema };
