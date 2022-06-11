@@ -5,24 +5,19 @@ const morgan = require("morgan");
 
 const {
   registerUser,
-  activateUserController,
-  loginUserController,
+  activateUser,
+  loginUser,
 } = require("./controllers/usersControllers");
 
 const {
-  getAllServicesController,
-  registerServiceController,
-  setStatusController,
+  getAllServices,
+  registerService,
+  setStatus,
 } = require("./controllers/servicesControllers");
 
-const {
-  sendCommentFileController,
-} = require("./controllers/commentsControllers");
+const sendCommentFile = require("./controllers/commentsControllers");
 
-const {
-  editUserController,
-  deleteUserController,
-} = require("./controllers/extraUsersControllers");
+const { editUser, deleteUser } = require("./controllers/extraUsersControllers");
 
 const validateAuth = require("./middlewares/authentication");
 const notFound = require("./middlewares/NotFound");
@@ -39,21 +34,20 @@ app.use(express.static("./uploads"));
 
 //USERS ENDPOINTS
 app.post("/users", registerUser);
-app.get("/users/activate/:registrationCode", activateUserController);
-app.post("/login", loginUserController);
-// app.get("/users/:id", validateAuth, getInfoUserController )
+app.get("/users/activate/:registrationCode", activateUser);
+app.post("/login", loginUser);
 
 //SERVICES ENDPOINTS
-app.get("/", getAllServicesController);
-app.post("/services", validateAuth, registerServiceController);
-app.patch("/services/:serviceId", validateAuth, setStatusController);
+app.get("/", getAllServices);
+app.post("/services", validateAuth, registerService);
+app.patch("/services/:serviceId", validateAuth, setStatus);
 
 //COMMENTS ENDPOINTS
-app.post("/comments/:serviceId", validateAuth, sendCommentFileController);
+app.post("/comments/:serviceId", validateAuth, sendCommentFile);
 
 //EXTRA USER ENDPOINTS
-app.patch("/users", validateAuth, editUserController);
-app.delete("/users", validateAuth, deleteUserController);
+app.patch("/users", validateAuth, editUser);
+app.delete("/users", validateAuth, deleteUser);
 
 //Middleware 404
 app.use(notFound);
@@ -61,7 +55,7 @@ app.use(notFound);
 //Middleware Error
 app.use(errorHandler);
 
-//Listening
+//Server Listening
 app.listen(SERVER_PORT, () => {
   console.log(`Server listening at localhost:${SERVER_PORT}`);
 });

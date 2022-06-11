@@ -7,7 +7,7 @@ const {
 const commentSchema = require("../schemas/commentSchema");
 const { serviceIdSchema } = require("../schemas/servicesSchemas");
 
-const sendCommentFileController = async (req, res, next) => {
+const sendCommentFile = async (req, res, next) => {
   try {
     const userId = req.auth.id;
     const { serviceId } = req.params;
@@ -15,7 +15,7 @@ const sendCommentFileController = async (req, res, next) => {
 
     const service = await selectServiceById(serviceId);
     if (!service) {
-      generateError(`This service does not exist`, 404);
+      throw generateError(`This service does not exist`, 404);
     }
 
     const { comment } = req.body;
@@ -25,7 +25,7 @@ const sendCommentFileController = async (req, res, next) => {
     const solvedFile = req.files?.solvedFile;
 
     if (!(solvedFile || comment)) {
-      generateError(`You must submit a comment and/or a file`, 400);
+      throw generateError(`You must submit a comment and/or a file`, 400);
     }
     const commentData = { userId, serviceId };
 
@@ -49,6 +49,4 @@ const sendCommentFileController = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  sendCommentFileController,
-};
+module.exports = sendCommentFile;

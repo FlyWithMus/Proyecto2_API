@@ -14,13 +14,13 @@ const populateDB = async () => {
     );
 
     await pool.query(
-      `INSERT INTO services (id_user, title, description, service_file, status) VALUES 
+      `INSERT INTO services (user_id, title, description, service_file, status) VALUES 
         (1, "New web", "I need a new web for my company", "service.pdf", false), 
         (2, "Text transcription", "I need to transcribe an interview", "interview.mp3", false);`
     );
 
     await pool.query(
-      `INSERT INTO comments (comment, solved_file, id_user, id_service) VALUES 
+      `INSERT INTO comments (comment, solved_file, user_id, service_id) VALUES 
         ("Web done", "web_finished.pdf", 2, 1), 
         ("Transcription done", "interview_transcription.pdf", 1, 2);`
     );

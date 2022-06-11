@@ -12,7 +12,7 @@ const generateError = require("../helpers/generateError");
 const { checkUserSchema } = require("../schemas/usersSchemas");
 const uploadFile = require("../helpers/uploadFile");
 
-const editUserController = async (req, res, next) => {
+const editUser = async (req, res, next) => {
   try {
     const userId = req.auth.id;
     const userDB = await selectUserById(userId);
@@ -63,13 +63,13 @@ const editUserController = async (req, res, next) => {
   }
 };
 
-const deleteUserController = async (req, res, next) => {
+const deleteUser = async (req, res, next) => {
   try {
     const user_id = req.auth.id;
     const affectedRows = await removeUser(user_id);
 
     if (!affectedRows) {
-      generateError(`This user does not exist`, 404);
+      throw generateError(`This user does not exist`, 404);
     }
     res.status(200).send({
       status: "ok",
@@ -81,6 +81,6 @@ const deleteUserController = async (req, res, next) => {
 };
 
 module.exports = {
-  editUserController,
-  deleteUserController,
+  editUser,
+  deleteUser,
 };

@@ -2,6 +2,7 @@ const {
   selectServices,
   insertNewService,
   updateServiceStatus,
+  selectServiceByServiceId,
 } = require("../repositories/servicesRepos");
 const uploadFile = require("../helpers/uploadFile");
 const generateError = require("../helpers/generateError");
@@ -10,12 +11,12 @@ const {
   serviceIdSchema,
 } = require("../schemas/servicesSchemas");
 
-const getAllServicesController = async (req, res, next) => {
+const getAllServices = async (req, res, next) => {
   try {
     const services = await selectServices();
 
     if (!services) {
-      generateError("There are no services", 400);
+      throw generateError("There are no services", 400);
     }
 
     res.status(200).send({
@@ -27,7 +28,7 @@ const getAllServicesController = async (req, res, next) => {
   }
 };
 
-const registerServiceController = async (req, res, next) => {
+const registerService = async (req, res, next) => {
   try {
     const userId = req.auth.id;
 
@@ -38,10 +39,8 @@ const registerServiceController = async (req, res, next) => {
     console.log(req.body);
     const file = req.files?.file;
 
-    // console.log(file, title, description);
-
     if (!(title && description && file)) {
-      generateError(
+      throw generateError(
         "Your service must include title, description, and a file",
         400
       );
@@ -62,7 +61,7 @@ const registerServiceController = async (req, res, next) => {
   }
 };
 
-const setStatusController = async (req, res, next) => {
+const setStatus = async (req, res, next) => {
   try {
     const { serviceId } = req.params;
 
@@ -72,11 +71,19 @@ const setStatusController = async (req, res, next) => {
 
     console.log(serviceId, userId);
 
+    const service = await selectServiceByServiceId(serviceId);
+    if (!service) {
+      throw generateError(
+        `The service you're trying to set the status for does not exist`,
+        404
+      );
+    }
+
     const affectedRows = await updateServiceStatus(serviceId, userId);
 
     if (!affectedRows) {
-      generateError(
-        `You are not allowed to set the status of this service or that service does not exist`,
+      throw generateError(
+        `You are not allowed to set the status of this service`,
         403
       );
     }
@@ -90,7 +97,7 @@ const setStatusController = async (req, res, next) => {
 };
 
 module.exports = {
-  getAllServicesController,
-  registerServiceController,
-  setStatusController,
+  getAllServices,
+  registerService,
+  setStatus,
 };

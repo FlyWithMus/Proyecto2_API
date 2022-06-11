@@ -28,7 +28,7 @@ const initDB = async () => {
     await pool.query(`
         CREATE TABLE services (
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            id_user INT NOT NULL,
+            user_id INT NOT NULL,
             title VARCHAR (100) NOT NULL,
             description VARCHAR (500) NOT NULL,
             service_file VARCHAR (150),
@@ -41,8 +41,8 @@ const initDB = async () => {
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             comment VARCHAR (500),
             solved_file VARCHAR (150),
-            id_user INT NOT NULL,
-            id_service INT NOT NULL
+            user_id INT NOT NULL,
+            service_id INT NOT NULL
         );
     `);
 

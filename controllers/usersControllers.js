@@ -1,4 +1,10 @@
-const insertUser = require("../repositories/insertUser");
+const {
+  selectUserByEmail,
+  insertUser,
+  selectUserByActivationCode,
+  deleteRegistrationCode,
+} = require("../repositories/usersRepos");
+const generateError = require("../helpers/generateError");
 const uploadFile = require("../helpers/uploadFile");
 const { v4: uuidv4 } = require("uuid");
 const sendMail = require("../helpers/sendMail");
@@ -7,15 +13,8 @@ const {
   checkUserSchema,
 } = require("../schemas/usersSchemas");
 
-// Login users variables
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const selectUserByEmail = require("../repositories/selectUserByEmail");
-const generateError = require("../helpers/generateError");
-
-// Activate users variables
-const selectUserByActivationCode = require("../repositories/selectUserByActivationCode");
-const deleteRegistrationCode = require("../repositories/deleteRegistrationCode");
 
 const registerUser = async (req, res, next) => {
   try {
@@ -28,7 +27,7 @@ const registerUser = async (req, res, next) => {
     const user = await selectUserByEmail(email);
 
     if (email === user?.email) {
-      generateError("This email has already been registered", 400);
+      throw generateError("This email has already been registered", 400);
     }
 
     const registrationCode = uuidv4();
@@ -67,14 +66,17 @@ const registerUser = async (req, res, next) => {
   }
 };
 
-const activateUserController = async (req, res, next) => {
+const activateUser = async (req, res, next) => {
   try {
     const { registrationCode } = req.params;
 
     const user = await selectUserByActivationCode(registrationCode);
 
     if (!user) {
-      generateError("Invalid registration code or already activated", 404);
+      throw generateError(
+        "Invalid registration code or already activated",
+        404
+      );
     }
 
     await deleteRegistrationCode(user.id);
@@ -85,7 +87,7 @@ const activateUserController = async (req, res, next) => {
   }
 };
 
-const loginUserController = async (req, res, next) => {
+const loginUser = async (req, res, next) => {
   try {
     await checkUserSchema.validateAsync(req.body);
     const { email, password } = req.body;
@@ -98,11 +100,11 @@ const loginUserController = async (req, res, next) => {
       user && (await bcrypt.compare(password, encryptedPassword));
 
     if (!isLoginValid) {
-      generateError("Wrong password or email", 400);
+      throw generateError("Wrong password or email", 400);
     }
 
     if (user.registrationCode) {
-      generateError(
+      throw generateError(
         "User not activated. Check your inbox and activate it through the link.",
         400
       );
@@ -124,6 +126,6 @@ const loginUserController = async (req, res, next) => {
 
 module.exports = {
   registerUser,
-  activateUserController,
-  loginUserController,
+  activateUser,
+  loginUser,
 };
