@@ -5,7 +5,6 @@ const {
   deleteRegistrationCode,
 } = require("../repositories/usersRepos");
 const generateError = require("../helpers/generateError");
-const uploadFile = require("../helpers/uploadFile");
 const { v4: uuidv4 } = require("uuid");
 const sendMail = require("../helpers/sendMail");
 const {
@@ -15,6 +14,7 @@ const {
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const processAndSaveImage = require("../helpers/processUploadImage");
 
 const registerUser = async (req, res, next) => {
   try {
@@ -41,7 +41,8 @@ const registerUser = async (req, res, next) => {
       registrationCode,
     };
     if (picture) {
-      const pictureName = await uploadFile(picture, "profilePictures");
+      const pictureName = await processAndSaveImage(picture.data);
+
       userData.pictureName = pictureName;
     }
 

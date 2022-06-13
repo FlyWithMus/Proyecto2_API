@@ -10,7 +10,7 @@ const {
 const sendMail = require("../helpers/sendMail");
 const generateError = require("../helpers/generateError");
 const { checkUserSchema } = require("../schemas/usersSchemas");
-const uploadFile = require("../helpers/uploadFile");
+const processAndSaveImage = require("../helpers/processUploadImage");
 
 const editUser = async (req, res, next) => {
   try {
@@ -36,11 +36,12 @@ const editUser = async (req, res, next) => {
       );
 
       await updateEmail(email, registrationCode, userId);
-      // res.status(201).send({
-      //   status: "ok",
-      //   message:
-      //     "We've sent you a confirmation email. Please, find the link on your inbox and activate your account.",
-      // });
+      res.status(201).send({
+        status: "ok",
+        message:
+          "We've sent you a confirmation email. Please, find the link on your inbox and activate your account.",
+      });
+      return;
     }
 
     if (password) {
@@ -48,7 +49,7 @@ const editUser = async (req, res, next) => {
     }
 
     if (picture) {
-      req.body.picture = await uploadFile(picture, "profilePictures");
+      req.body.picture = await processAndSaveImage(picture.data);
     }
     console.log({ ...userDB, ...req.body });
     await updateUserData({ ...userDB, ...req.body });

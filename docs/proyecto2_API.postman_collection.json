@@ -60,10 +60,13 @@
 		{
 			"name": "Activate User",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/users/activate/2c79d3bc-2765-442d-b4f7-4c7de4bd7f59",
+					"raw": "localhost:3000/users/activate/c74793d3-ee33-4e65-a4bd-97fd0578af5c",
 					"host": [
 						"localhost"
 					],
@@ -71,7 +74,7 @@
 					"path": [
 						"users",
 						"activate",
-						"2c79d3bc-2765-442d-b4f7-4c7de4bd7f59"
+						"c74793d3-ee33-4e65-a4bd-97fd0578af5c"
 					]
 				}
 			},
@@ -136,7 +139,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNjU0ODk5MzM1LCJleHAiOjE2NTc0OTEzMzV9.NsZdy8UDOYevkYJzovCNNBrJ3SS37KgZMOwfX6zCnpY",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjU1MTQyNDc3LCJleHAiOjE2NTc3MzQ0Nzd9.Mcbs0mpfKZAkmdXWBa3dEQU8caNqZv5fjW17cKuHLWk",
 							"type": "string"
 						}
 					]
@@ -159,8 +162,7 @@
 						{
 							"key": "file",
 							"type": "file",
-							"src": [],
-							"disabled": true
+							"src": "/Users/josealor/Desktop/Bootcamp/Proyecto2/Proyecto2/image.png"
 						}
 					]
 				},
@@ -185,7 +187,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNjU0ODk5MzM1LCJleHAiOjE2NTc0OTEzMzV9.NsZdy8UDOYevkYJzovCNNBrJ3SS37KgZMOwfX6zCnpY",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjU1MTQyNDc3LCJleHAiOjE2NTc3MzQ0Nzd9.Mcbs0mpfKZAkmdXWBa3dEQU8caNqZv5fjW17cKuHLWk",
 							"type": "string"
 						}
 					]
@@ -203,8 +205,7 @@
 						{
 							"key": "solvedFile",
 							"type": "file",
-							"src": [],
-							"disabled": true
+							"src": "/Users/josealor/Desktop/Bootcamp/Proyecto2/Portal de necesidades.docx.pdf"
 						}
 					]
 				},
