@@ -21,5 +21,27 @@ const insertCommentsFile = async ({
   );
   return insertId;
 };
+const selectServiceByServiceId = async (serviceId) => {
+  const [[data]] = await pool.query(
+    `SELECT S.*, u.name serviceAuthor FROM services s LEFT JOIN users u ON s.user_id = u.id WHERE s.id=?;`,
+    [serviceId]
+  );
+  console.log(data);
+  return data;
+};
 
-module.exports = { selectServiceById, insertCommentsFile };
+const selectCommentsbyServiceId = async (serviceId) => {
+  const [commentsInfo] = await pool.query(
+    `SELECT c.*, u.name author FROM comments c LEFT JOIN users u ON c.user_id = u.id WHERE service_id=?;`,
+    [serviceId]
+  );
+  console.log("commentsInfo: ", commentsInfo);
+  return commentsInfo;
+};
+
+module.exports = {
+  selectServiceById,
+  insertCommentsFile,
+  selectServiceByServiceId,
+  selectCommentsbyServiceId,
+};

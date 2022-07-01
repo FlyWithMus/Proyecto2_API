@@ -25,15 +25,6 @@ const selectServiceByServiceId = async (serviceId) => {
   return data;
 };
 
-const selectCommentsbyServiceId = async (serviceId) => {
-  const [commentsInfo] = await pool.query(
-    `SELECT c.*, u.name author FROM comments c LEFT JOIN users u ON c.user_id = u.id WHERE service_id=?;`,
-    [serviceId]
-  );
-  console.log("commentsInfo: ", commentsInfo);
-  return commentsInfo;
-};
-
 const updateServiceStatus = async (serviceId, userId) => {
   const [{ affectedRows }] = await pool.query(
     `UPDATE services SET status=1 WHERE id=? AND user_id=?;`,
@@ -42,10 +33,20 @@ const updateServiceStatus = async (serviceId, userId) => {
   console.log(affectedRows);
   return affectedRows;
 };
+
+const selectServicesByUserId = async (userId) => {
+  const [services] = await pool.query(
+    `SELECT s.*, u.name serviceAuthor from services s LEFT JOIN users u ON s.user_id=u.id WHERE u.id=?`,
+    [userId]
+  );
+  console.log(services);
+  return services;
+};
+
 module.exports = {
   selectServices,
   insertNewService,
-  selectServiceByServiceId,
-  selectCommentsbyServiceId,
   updateServiceStatus,
+  selectServiceByServiceId,
+  selectServicesByUserId,
 };

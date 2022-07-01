@@ -9,16 +9,20 @@ const {
   activateUser,
   loginUser,
   getUserInfo,
+  getAnyUserInfo,
 } = require("./controllers/usersControllers");
 
 const {
   getAllServices,
   registerService,
   setStatus,
-  getServiceWithCommentsbyId,
+  getServicesbyUserId,
 } = require("./controllers/servicesControllers");
 
-const sendCommentFile = require("./controllers/commentsControllers");
+const {
+  sendCommentFile,
+  getCommentsbyServiceId,
+} = require("./controllers/commentsControllers");
 
 const { editUser, deleteUser } = require("./controllers/extraUsersControllers");
 
@@ -45,16 +49,18 @@ app.use(express.static("./uploads"));
 app.post("/users", registerUser);
 app.get("/users/activate/:registrationCode", activateUser);
 app.post("/login", loginUser);
-app.get("/user/:userId", validateAuth, getUserInfo);
+app.get("/user", validateAuth, getUserInfo);
+app.get("/user/:userId", validateAuth, getAnyUserInfo);
 
 //SERVICES ENDPOINTS
 app.get("/", getAllServices);
-app.get("/getservice/:serviceId", validateAuth, getServiceWithCommentsbyId);
 app.post("/services", validateAuth, registerService);
 app.patch("/services/:serviceId", validateAuth, setStatus);
+app.get("/services/user", validateAuth, getServicesbyUserId);
 
 //COMMENTS ENDPOINTS
 app.post("/comments/:serviceId", validateAuth, sendCommentFile);
+app.get("/getcomments/:serviceId", validateAuth, getCommentsbyServiceId);
 
 //EXTRA USER ENDPOINTS
 app.patch("/users", validateAuth, editUser);

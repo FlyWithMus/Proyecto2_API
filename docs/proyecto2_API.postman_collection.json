@@ -111,7 +111,35 @@
 			"response": []
 		},
 		{
-			"name": "Get User Info by Id",
+			"name": "Get User Info",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNjU2NjkyMTkyLCJleHAiOjE2NTkyODQxOTJ9.0til_kiWSli3Y6s8woNOil1PXM3PFnpYFPkL9OKoCJc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/user",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Any User Info by Id",
 			"request": {
 				"auth": {
 					"type": "bearer",
