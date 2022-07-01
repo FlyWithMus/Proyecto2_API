@@ -8,6 +8,7 @@ const {
   registerUser,
   activateUser,
   loginUser,
+  getUserInfo,
 } = require("./controllers/usersControllers");
 
 const {
@@ -44,6 +45,7 @@ app.use(express.static("./uploads"));
 app.post("/users", registerUser);
 app.get("/users/activate/:registrationCode", activateUser);
 app.post("/login", loginUser);
+app.get("/user/:userId", validateAuth, getUserInfo);
 
 //SERVICES ENDPOINTS
 app.get("/", getAllServices);

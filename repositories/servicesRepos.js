@@ -2,7 +2,9 @@ const getPool = require("../database/getPool");
 const pool = getPool();
 
 const selectServices = async () => {
-  const [services] = await pool.query(`SELECT * from services`);
+  const [services] = await pool.query(
+    `SELECT s.*, u.name serviceAuthor from services s LEFT JOIN users u ON s.user_id=u.id`
+  );
   return services;
 };
 
