@@ -3,6 +3,7 @@ const {
   insertUser,
   selectUserByActivationCode,
   deleteRegistrationCode,
+  selectUserInfoById,
 } = require("../repositories/usersRepos");
 const generateError = require("../helpers/generateError");
 const { v4: uuidv4 } = require("uuid");
@@ -125,8 +126,27 @@ const loginUser = async (req, res, next) => {
   }
 };
 
+const getUserInfo = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const userInfo = await selectUserInfoById(userId);
+
+    if (!userInfo) {
+      throw generateError("This user does not exist", 400);
+    }
+
+    res.status(200).send({
+      status: "ok",
+      data: userInfo,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registerUser,
   activateUser,
   loginUser,
+  getUserInfo,
 };

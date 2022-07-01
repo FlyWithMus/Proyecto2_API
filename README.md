@@ -55,6 +55,11 @@
     - password \*
   - Returning JWT token
 
+- GET /USER/:userId
+
+  - Display of user details
+  - Authentication middleware
+
 - GET /
 
   - Display of registered services
