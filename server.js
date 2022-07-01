@@ -2,6 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const fileUpload = require("express-fileupload");
 const morgan = require("morgan");
+const cors = require("cors");
 
 const {
   registerUser,
@@ -13,6 +14,7 @@ const {
   getAllServices,
   registerService,
   setStatus,
+  getServiceWithCommentsbyId,
 } = require("./controllers/servicesControllers");
 
 const sendCommentFile = require("./controllers/commentsControllers");
@@ -27,6 +29,12 @@ const { SERVER_PORT } = process.env;
 
 const app = express();
 
+app.use(
+  cors({
+    origin: ["http://localhost:3001"],
+  })
+);
+
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(fileUpload());
@@ -39,6 +47,7 @@ app.post("/login", loginUser);
 
 //SERVICES ENDPOINTS
 app.get("/", getAllServices);
+app.get("/getservice/:serviceId", validateAuth, getServiceWithCommentsbyId);
 app.post("/services", validateAuth, registerService);
 app.patch("/services/:serviceId", validateAuth, setStatus);
 

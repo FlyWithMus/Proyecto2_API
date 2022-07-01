@@ -132,6 +132,35 @@
 			"response": []
 		},
 		{
+			"name": "Get Service By Id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNjU2NjA3NTI1LCJleHAiOjE2NTkxOTk1MjV9.fMFTrCY8VtlsQCDhSGg0ejjF8VPGAHeD_rU2RrYQGXc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/getservice/4",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"getservice",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Register New Service",
 			"request": {
 				"auth": {

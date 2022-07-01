@@ -59,6 +59,11 @@
 
   - Display of registered services
 
+- GET /getservice/:serviceId
+
+  - Display of service by Id with comments and solved files
+  - Authentication middleware
+
 - POST /services
 
   - Required-service registration

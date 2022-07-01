@@ -3,6 +3,7 @@ const {
   insertNewService,
   updateServiceStatus,
   selectServiceByServiceId,
+  selectCommentsbyServiceId,
 } = require("../repositories/servicesRepos");
 const uploadFile = require("../helpers/uploadFile");
 const generateError = require("../helpers/generateError");
@@ -22,6 +23,25 @@ const getAllServices = async (req, res, next) => {
     res.status(200).send({
       status: "ok",
       data: services,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getServiceWithCommentsbyId = async (req, res, next) => {
+  try {
+    const { serviceId } = req.params;
+    const service = await selectServiceByServiceId(serviceId);
+    const comments = await selectCommentsbyServiceId(serviceId);
+
+    if (!service) {
+      throw generateError("There is no service", 400);
+    }
+
+    res.status(200).send({
+      status: "ok",
+      data: [service, comments],
     });
   } catch (error) {
     next(error);
@@ -98,6 +118,7 @@ const setStatus = async (req, res, next) => {
 
 module.exports = {
   getAllServices,
+  getServiceWithCommentsbyId,
   registerService,
   setStatus,
 };
