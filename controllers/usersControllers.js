@@ -5,6 +5,7 @@ const {
   deleteRegistrationCode,
   selectUserInfoById,
 } = require("../repositories/usersRepos");
+const { selectServicesByUserId } = require("../repositories/servicesRepos");
 const generateError = require("../helpers/generateError");
 const { v4: uuidv4 } = require("uuid");
 const sendMail = require("../helpers/sendMail");
@@ -134,10 +135,11 @@ const getUserInfo = async (req, res, next) => {
     if (!userInfo) {
       throw generateError("This user does not exist", 400);
     }
+    const userServices = await selectServicesByUserId(userId);
 
     res.status(200).send({
       status: "ok",
-      data: userInfo,
+      data: { ...userInfo, services: userServices },
     });
   } catch (error) {
     next(error);
