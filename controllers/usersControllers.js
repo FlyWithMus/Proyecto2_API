@@ -62,6 +62,7 @@ const registerUser = async (req, res, next) => {
 
     res.status(201).send({
       status: "ok",
+      message: "Please, check your email to confirm it's you!",
       data: { id: insertId, ...userData },
     });
   } catch (error) {
@@ -121,7 +122,11 @@ const loginUser = async (req, res, next) => {
       expiresIn: "30d",
     });
 
-    res.status(200).send({ status: "ok", data: { token } });
+    res.status(200).send({
+      status: "ok",
+      message: "User successfully logged!",
+      data: { token },
+    });
   } catch (error) {
     next(error);
   }
