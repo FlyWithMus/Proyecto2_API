@@ -5,7 +5,7 @@ API for a platform where users can register, post required services and help oth
 ## START DATABASE:
 
 1. Create the database with command: run initDB
-2. Populate the databe with command: populateDB
+2. Populate the databe with command: run populateDB
 
 ## TABLES 📊:
 
