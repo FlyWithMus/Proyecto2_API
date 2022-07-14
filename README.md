@@ -1,4 +1,11 @@
-# PORTAL DE NECESIDADES DIGITALES 🚀
+# PORTAL DE NECESIDADES DIGITALES (FREELANCE SERVICES PLATFORM)🚀
+
+API for a platform where users can register, post required services and help others with their needs.
+
+## START DATABASE:
+
+1. Create the database with command: run initDB
+2. Populate the databe with command: populateDB
 
 ## TABLES 📊:
 
@@ -57,12 +64,12 @@
 
 - GET /user
 
-  - Displays logged user details
+  - Displays logged user details and her services
   - Authentication middleware
 
 - GET /user/:userId
 
-  - Displays any user details
+  - Displays any user details and their services
   - Authentication middleware
 
 - GET /
@@ -92,7 +99,7 @@
 
 - POST /comments/:serviceId
 
-  - Sending comment and/or solved file to a required service
+  - Sending comments and/or solved file to a required service
   - Authentication middleware
   - Body (form-data):
     - comment
@@ -114,7 +121,7 @@
     - password
     - bio
     - picture
-  - Returning user id and confirmation message
+  - Returning updated user info and confirmation message
 
 - DELETE /users
   - User deletion
