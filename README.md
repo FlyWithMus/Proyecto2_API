@@ -4,8 +4,8 @@ API for a platform where users can register, post required services and help oth
 
 ## START DATABASE:
 
-1. Create the database with command: run initDB
-2. Populate the databe with command: run populateDB
+1. Create the database with command: npm run initDB
+2. Populate the databe with command: npm run populateDB
 
 ## TABLES 📊:
 
